@@ -1,8 +1,8 @@
 name: Main
 
-# on:
-#   push:
-#     branches: [main]
+on:
+  push:
+    branches: [main]
 
 permissions:
   actions: write
@@ -13,16 +13,41 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    uses: ./.github/workflows/build.yml
+  build-fpm:
     strategy:
       matrix:
         arch: ['linux/amd64', 'linux/arm64']
-        os: ['ubuntu-22.04']
-    with:
-      runner-os: ${{ matrix.os }}
-      arch: ${{ matrix.arch }}
-      cache-key: ${{ matrix.os }}-buildx-${{ matrix.arch }}-${{ github.ref_name }}-${{ github.sha }}
-      cache-restore-keys: |
-        ${{ matrix.os }}-buildx-${{ matrix.arch }}-${{ github.ref_name }}-
-        ${{ matrix.os }}-buildx-${{ matrix.arch }}-
+    name: Build FPM images
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: ./.github/actions/build-images
+        with:
+          arch: ${{ matrix.arch }}
+          cache-key: ${{ matrix.os }}-buildx-${{ matrix.arch }}-${{ github.ref_name }}-${{ github.sha }}
+          cache-restore-keys: |
+            ${{ matrix.os }}-buildx-${{ matrix.arch }}-${{ github.ref_name }}-
+            ${{ matrix.os }}-buildx-${{ matrix.arch }}-
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          dockerfile: 'fpm/Dockerfile'
+
+  build-apache:
+    strategy:
+      matrix:
+        arch: ['linux/amd64', 'linux/arm64']
+    name: Build Apache images
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: ./.github/actions/build-images
+        with:
+          arch: ${{ matrix.arch }}
+          cache-key: ${{ matrix.os }}-buildx-${{ matrix.arch }}-${{ github.ref_name }}-${{ github.sha }}
+          cache-restore-keys: |
+            ${{ matrix.os }}-buildx-${{ matrix.arch }}-${{ github.ref_name }}-
+            ${{ matrix.os }}-buildx-${{ matrix.arch }}-
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          dockerfile: 'apache/Dockerfile'
+          image-name-suffix: '/apache'
