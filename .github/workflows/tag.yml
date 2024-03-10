@@ -17,7 +17,9 @@ jobs:
     uses: Ilyes512/github-actions/.github/workflows/build-php.yml@php-workflows
     strategy:
       matrix:
-        platform: ['linux/amd64', 'linux/arm64']
+        platform:
+          - linux/amd64
+          - linux/arm64
         docker:
           - dockerfile: fpm/Dockerfile
             image-name: ghcr.io/${{ github.repository }}
@@ -25,9 +27,8 @@ jobs:
           - dockerfile: apache/Dockerfile
             image-name: ghcr.io/${{ github.repository }}/apache
             key: apache
-        os: ['ubuntu-22.04']
     with:
-      runner-os: ${{ matrix.os }}
+      runner-os: ubuntu-22.04
       platform: ${{ matrix.platform }}
       image-name: ${{ matrix.docker.image-name }}
       dockerfile: ${{ matrix.docker.dockerfile }}
@@ -36,3 +37,15 @@ jobs:
         ${{ matrix.os }}-buildx-${{ matrix.platform }}-${{ matrix.docker.key }}-${{ github.ref_name }}-
         ${{ matrix.os }}-buildx-${{ matrix.platform }}-${{ matrix.docker.key }}-main-
         ${{ matrix.os }}-buildx-${{ matrix.platform }}-${{ matrix.docker.key }}-
+
+  merge:
+    uses: Ilyes512/github-actions/.github/workflows/merge-php.yml@php-workflows
+    needs: build
+    strategy:
+      matrix:
+        image-name:
+          - ghcr.io/${{ github.repository }}
+          - ghcr.io/${{ github.repository }}/apache
+    with:
+      runner-os: ubuntu-22.04
+      image-name: ${{ matrix.image-name }}
