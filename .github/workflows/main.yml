@@ -19,19 +19,19 @@ jobs:
       matrix:
         platform: ['linux/amd64', 'linux/arm64']
         docker:
-          - dockerfile: 'fpm/Dockerfile'
-            namesuffix: ''
-            key: 'fpm'
-          - dockerfile: 'apache/Dockerfile'
-            namesuffix: '/apache'
-            key: 'apache'
+          - dockerfile: fpm/Dockerfile
+            image-name: ghcr.io/${{ github.repository }}
+            key: fpm
+          - dockerfile: apache/Dockerfile
+            image-name: ghcr.io/${{ github.repository }}/apache
+            key: apache
         os: ['ubuntu-22.04']
     with:
       runner-os: ${{ matrix.os }}
       platform: ${{ matrix.platform }}
+      image-name: ${{ matrix.docker.image-name }}
+      dockerfile: ${{ matrix.docker.dockerfile }}
       cache-key: ${{ matrix.os }}-buildx-${{ matrix.platform }}-${{ matrix.docker.key }}-${{ github.ref_name }}-${{ github.sha }}
       cache-restore-keys: |
         ${{ matrix.os }}-buildx-${{ matrix.platform }}-${{ matrix.docker.key }}-${{ github.ref_name }}-
         ${{ matrix.os }}-buildx-${{ matrix.platform }}-${{ matrix.docker.key }}
-      dockerfile: ${{ matrix.docker.dockerfile }}
-      image-name-suffix: ${{ matrix.docker.namesuffix }}
