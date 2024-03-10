@@ -15,7 +15,7 @@ jobs:
   build-fpm:
     strategy:
       matrix:
-        arch: ['linux/amd64', 'linux/arm64']
+        platform: ['linux/amd64', 'linux/arm64']
     name: Build FPM image
     runs-on: ubuntu-22.04
     steps:
@@ -23,19 +23,19 @@ jobs:
         uses: actions/checkout@v4
       - uses: ./.github/actions/build-images
         with:
-          arch: ${{ matrix.arch }}
-          cache-key: ${{ matrix.os }}-buildx-${{ matrix.arch }}-pr-${{ github.event.number }}-${{ github.sha }}
+          platform: ${{ matrix.platform }}
+          cache-key: ${{ matrix.os }}-buildx-${{ matrix.platform }}-pr-${{ github.event.number }}-${{ github.sha }}
           cache-restore-keys: |
-            ${{ matrix.os }}-buildx-${{ matrix.arch }}-pr-${{ github.event.number }}-
-            ${{ matrix.os }}-buildx-${{ matrix.arch }}-pr-
-            ${{ matrix.os }}-buildx-${{ matrix.arch }}-main-
+            ${{ matrix.os }}-buildx-${{ matrix.platform }}-pr-${{ github.event.number }}-
+            ${{ matrix.os }}-buildx-${{ matrix.platform }}-pr-
+            ${{ matrix.os }}-buildx-${{ matrix.platform }}-main-
           github-token: ${{ secrets.GITHUB_TOKEN }}
           dockerfile: 'fpm/Dockerfile'
 
   build-apache:
     strategy:
       matrix:
-        arch: ['linux/amd64', 'linux/arm64']
+        platform: ['linux/amd64', 'linux/arm64']
     name: Build Apache image
     runs-on: ubuntu-22.04
     steps:
@@ -43,12 +43,12 @@ jobs:
         uses: actions/checkout@v4
       - uses: ./.github/actions/build-images
         with:
-          arch: ${{ matrix.arch }}
-          cache-key: ${{ matrix.os }}-buildx-${{ matrix.arch }}-pr-${{ github.event.number }}-${{ github.sha }}
+          platform: ${{ matrix.platform }}
+          cache-key: ${{ matrix.os }}-buildx-${{ matrix.platform }}-pr-${{ github.event.number }}-${{ github.sha }}
           cache-restore-keys: |
-            ${{ matrix.os }}-buildx-${{ matrix.arch }}-pr-${{ github.event.number }}-
-            ${{ matrix.os }}-buildx-${{ matrix.arch }}-pr-
-            ${{ matrix.os }}-buildx-${{ matrix.arch }}-main-
+            ${{ matrix.os }}-buildx-${{ matrix.platform }}-pr-${{ github.event.number }}-
+            ${{ matrix.os }}-buildx-${{ matrix.platform }}-pr-
+            ${{ matrix.os }}-buildx-${{ matrix.platform }}-main-
           github-token: ${{ secrets.GITHUB_TOKEN }}
           dockerfile: 'apache/Dockerfile'
           image-name-suffix: '/apache'

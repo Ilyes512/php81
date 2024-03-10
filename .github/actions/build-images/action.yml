@@ -1,28 +1,28 @@
 name: Build Images
 
 inputs:
-  arch:
-    description: 'Architecture ("linux/amd64", "linux/arm64")'
+  platform:
+    description: Platform i.e. "linux/amd64", "linux/arm64"
     type: string
     required: true
   cache-key:
-    description: 'Cache key'
+    description: Cache key
     type: string
     required: true
   cache-restore-keys:
-    description: 'Cache restore keys list'
+    description: Cache restore keys list
     type: string
     required: true
   dockerfile:
-    description: 'Dockerfile path'
+    description: Dockerfile path
     type: string
     required: true
   image-name-suffix:
-    description: 'Image name suffix'
+    description: Image name suffix
     type: string
     default: ''
   github-token:
-    description: 'GitHub token'
+    description: GitHub token
     type: string
     required: true
 
@@ -56,7 +56,7 @@ runs:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3.0.0
       with:
-          platforms: ${{ inputs.arch }}
+          platforms: ${{ inputs.platform }}
     - name: Set up Docker Buildx
       id: buildx
       uses: docker/setup-buildx-action@v3.0.0
@@ -110,7 +110,7 @@ runs:
         push: ${{ github.actor != 'dependabot[bot]' }}
         context: .
         file: ${{ inputs.dockerfile }}
-        platforms: ${{ inputs.arch }}
+        platforms: ${{ inputs.platform }}
         target: runtime
         tags: ${{ steps.meta_runtime.outputs.tags }}
         labels: ${{ steps.meta_runtime.outputs.labels }}
@@ -122,7 +122,7 @@ runs:
         push: ${{ github.actor != 'dependabot[bot]' }}
         context: .
         file: ${{ inputs.dockerfile }}
-        platforms: ${{ inputs.arch }}
+        platforms: ${{ inputs.platform }}
         target: builder
         tags: ${{ steps.meta_builder.outputs.tags }}
         labels: ${{ steps.meta_builder.outputs.labels }}
@@ -134,7 +134,7 @@ runs:
         push: ${{ github.actor != 'dependabot[bot]' }}
         context: .
         file: ${{ inputs.dockerfile }}
-        platforms: ${{ inputs.arch }}
+        platforms: ${{ inputs.platform }}
         target: builder_nodejs
         tags: ${{ steps.meta_builder_nodejs.outputs.tags }}
         labels: ${{ steps.meta_builder_nodejs.outputs.labels }}
@@ -146,7 +146,7 @@ runs:
         push: ${{ github.actor != 'dependabot[bot]' }}
         context: .
         file: ${{ inputs.dockerfile }}
-        platforms: ${{ inputs.arch }}
+        platforms: ${{ inputs.platform }}
         target: vscode
         tags: ${{ steps.meta_vscode.outputs.tags }}
         labels: ${{ steps.meta_vscode.outputs.labels }}

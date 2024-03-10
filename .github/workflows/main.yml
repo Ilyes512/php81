@@ -16,7 +16,7 @@ jobs:
   build-fpm:
     strategy:
       matrix:
-        arch: ['linux/amd64', 'linux/arm64']
+        platform: ['linux/amd64', 'linux/arm64']
     name: Build FPM images
     runs-on: ubuntu-22.04
     steps:
@@ -24,18 +24,18 @@ jobs:
         uses: actions/checkout@v4
       - uses: ./.github/actions/build-images
         with:
-          arch: ${{ matrix.arch }}
-          cache-key: ${{ matrix.os }}-buildx-${{ matrix.arch }}-${{ github.ref_name }}-${{ github.sha }}
+          platform: ${{ matrix.platform }}
+          cache-key: ${{ matrix.os }}-buildx-${{ matrix.platform }}-${{ github.ref_name }}-${{ github.sha }}
           cache-restore-keys: |
-            ${{ matrix.os }}-buildx-${{ matrix.arch }}-${{ github.ref_name }}-
-            ${{ matrix.os }}-buildx-${{ matrix.arch }}-
+            ${{ matrix.os }}-buildx-${{ matrix.platform }}-${{ github.ref_name }}-
+            ${{ matrix.os }}-buildx-${{ matrix.platform }}-
           github-token: ${{ secrets.GITHUB_TOKEN }}
           dockerfile: 'fpm/Dockerfile'
 
   build-apache:
     strategy:
       matrix:
-        arch: ['linux/amd64', 'linux/arm64']
+        platform: ['linux/amd64', 'linux/arm64']
     name: Build Apache images
     runs-on: ubuntu-22.04
     steps:
@@ -43,11 +43,11 @@ jobs:
         uses: actions/checkout@v4
       - uses: ./.github/actions/build-images
         with:
-          arch: ${{ matrix.arch }}
-          cache-key: ${{ matrix.os }}-buildx-${{ matrix.arch }}-${{ github.ref_name }}-${{ github.sha }}
+          platform: ${{ matrix.platform }}
+          cache-key: ${{ matrix.os }}-buildx-${{ matrix.platform }}-${{ github.ref_name }}-${{ github.sha }}
           cache-restore-keys: |
-            ${{ matrix.os }}-buildx-${{ matrix.arch }}-${{ github.ref_name }}-
-            ${{ matrix.os }}-buildx-${{ matrix.arch }}-
+            ${{ matrix.os }}-buildx-${{ matrix.platform }}-${{ github.ref_name }}-
+            ${{ matrix.os }}-buildx-${{ matrix.platform }}-
           github-token: ${{ secrets.GITHUB_TOKEN }}
           dockerfile: 'apache/Dockerfile'
           image-name-suffix: '/apache'
