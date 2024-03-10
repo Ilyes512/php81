@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   build:
-    uses: ./.github/workflows/build.yml
+    uses: Ilyes512/github-actions/.github/workflows/build-php.yml@php-workflows
     strategy:
       matrix:
         platform: ['linux/amd64', 'linux/arm64']
